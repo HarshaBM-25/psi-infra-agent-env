@@ -1,21 +1,18 @@
 """
-main.py — FastAPI server. OpenEnv HTTP endpoints.
-POST /reset  POST /step  GET /state  GET /health
+main.py — FastAPI server for InfraAgent-Env v2.0
+Endpoints: POST /reset  POST /step  GET /state  GET /health  GET /tasks  GET /
 """
-
+from __future__ import annotations
 from contextlib import asynccontextmanager
 from typing import Optional
 import os
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 
 from env.infra_env import InfraEnv
 from env.schemas import InfraAction, StepResult, ResetResult, InfraState
-
-from server.dashboard_router import router as dashboard_router
-
-app.include_router(dashboard_router)
 
 _env: Optional[InfraEnv] = None
 DEFAULT_TASK = os.getenv("TASK_ID", "task1_incident_recovery")
@@ -31,7 +28,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="InfraAgent-Env v2",
+    title="InfraAgent-Env",
     description="Microservice-aware OpenEnv RL environment for autonomous SRE agents.",
     version="2.0.0",
     lifespan=lifespan,
@@ -51,11 +48,34 @@ def get_env() -> InfraEnv:
     return _env
 
 
+# ── Dashboard ─────────────────────────────────────────────────────────────────
+
+@app.get("/", response_class=HTMLResponse)
+async def dashboard():
+    """Serve the live dashboard UI."""
+    try:
+        with open("dashboard/dashboard.html", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(
+            content="<h2 style='font-family:monospace;color:#f87171;padding:40px'>"
+                    "dashboard/dashboard.html not found</h2>",
+            status_code=404,
+        )
+
+
+# ── OpenEnv required endpoints ────────────────────────────────────────────────
+
 @app.post("/reset", response_model=ResetResult)
 async def reset(
     task_id: Optional[str] = Query(default=None),
-    seed: Optional[int] = Query(default=42),
+    seed:    Optional[int]  = Query(default=42),
 ):
+    """
+    Reset the environment to initial state.
+    Query params: task_id, seed
+    Returns: initial observation.
+    """
     global _env
     task = task_id or DEFAULT_TASK
     try:
@@ -67,6 +87,10 @@ async def reset(
 
 @app.post("/step", response_model=StepResult)
 async def step(action: InfraAction):
+    """
+    Execute one action in the environment.
+    Returns: observation, reward, done, info.
+    """
     env = get_env()
     try:
         return env.step(action)
@@ -78,27 +102,40 @@ async def step(action: InfraAction):
 
 @app.get("/state", response_model=InfraState)
 async def state():
+    """Return full internal environment state."""
     return get_env().state()
 
 
+# ── Utility endpoints ─────────────────────────────────────────────────────────
+
 @app.get("/health")
 async def health():
+    """Health check — used by Docker HEALTHCHECK and inference.py polling."""
     return {"status": "ok", "version": "2.0.0"}
 
 
 @app.get("/tasks")
-async def tasks():
-    return {"tasks": [
-        {"id": "task1_incident_recovery",  "difficulty": "easy",   "max_steps": 100},
-        {"id": "task2_predictive_scaling", "difficulty": "medium",  "max_steps": 150},
-        {"id": "task3_root_cause",         "difficulty": "hard",    "max_steps": 200},
-    ]}
-
-
-@app.get("/")
-async def root():
+async def list_tasks():
+    """List available tasks with metadata."""
     return {
-        "name": "InfraAgent-Env v2",
-        "version": "2.0.0",
-        "endpoints": ["/reset", "/step", "/state", "/health", "/tasks", "/docs"],
+        "tasks": [
+            {
+                "id":          "task1_incident_recovery",
+                "difficulty":  "easy",
+                "max_steps":   100,
+                "description": "Sudden traffic spike — diagnose bottleneck and restore SLA.",
+            },
+            {
+                "id":          "task2_predictive_scaling",
+                "difficulty":  "medium",
+                "max_steps":   150,
+                "description": "Pre-scale services before flash traffic spikes arrive.",
+            },
+            {
+                "id":          "task3_root_cause",
+                "difficulty":  "hard",
+                "max_steps":   200,
+                "description": "Silent DB fault causes cascading failures — diagnose and fix.",
+            },
+        ]
     }
