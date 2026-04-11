@@ -8,1009 +8,776 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-:root {
-  --bg:          #080c14;
-  --bg1:         #0d1220;
-  --bg2:         #111827;
-  --bg3:         #1a2236;
-  --bg4:         #212d42;
-  --border:      rgba(255,255,255,0.06);
-  --border2:     rgba(255,255,255,0.11);
-  --text:        #e2e8f4;
-  --text2:       #7e8fa8;
-  --text3:       #3d4f68;
-  --blue:        #4f8ef7;
-  --blue2:       #6fa3f8;
-  --blue-bg:     rgba(79,142,247,0.10);
-  --green:       #34d399;
-  --green-bg:    rgba(52,211,153,0.10);
-  --amber:       #fbbf24;
-  --amber-bg:    rgba(251,191,36,0.10);
-  --red:         #f87171;
-  --red-bg:      rgba(248,113,113,0.10);
-  --purple:      #a78bfa;
-  --purple-bg:   rgba(167,139,250,0.10);
-  --r:           8px;
-  --r2:          12px;
-  --font:        'Inter', system-ui, sans-serif;
-  --mono:        'JetBrains Mono', monospace;
-  --shadow:      0 4px 24px rgba(0,0,0,0.4);
+:root{
+  --bg:#080c14;--bg1:#0d1220;--bg2:#111827;--bg3:#1a2236;--bg4:#212d42;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
+  --text:#e2e8f4;--text2:#7e8fa8;--text3:#3d4f68;
+  --blue:#4f8ef7;--blue2:#6fa3f8;--blue-bg:rgba(79,142,247,0.10);
+  --green:#34d399;--green-bg:rgba(52,211,153,0.10);
+  --amber:#fbbf24;--amber-bg:rgba(251,191,36,0.10);
+  --red:#f87171;--red-bg:rgba(248,113,113,0.10);
+  --purple:#a78bfa;--purple-bg:rgba(167,139,250,0.10);
+  --r:8px;--r2:12px;
+  --font:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
 }
 
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  line-height: 1.5;
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── SHELL ── */
+.shell{display:flex;height:100vh;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:210px;flex-shrink:0;background:var(--bg1);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;padding:18px 12px;gap:4px;
+}
+.logo-row{
+  display:flex;align-items:center;gap:10px;
+  padding:2px 6px 16px;border-bottom:1px solid var(--border);margin-bottom:8px;
+}
+.logo-icon{
+  width:28px;height:28px;border-radius:7px;flex-shrink:0;
+  background:linear-gradient(135deg,#4f8ef7,#a78bfa);
+  display:flex;align-items:center;justify-content:center;
+}
+.logo-icon svg{width:13px;height:13px;fill:#fff}
+.logo-text{font-size:13px;font-weight:600;letter-spacing:-0.02em}
+.logo-sub{font-size:10px;color:var(--text2);margin-top:1px}
+
+.sb-label{
+  font-size:9.5px;font-weight:600;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--text3);padding:4px 8px;margin-top:4px;
 }
 
-/* ─── LAYOUT ──────────────────────────────────────────────── */
-.shell { display: flex; height: 100vh; overflow: hidden; }
+.task-btn{
+  display:flex;align-items:center;gap:9px;padding:7px 9px;
+  border-radius:var(--r);cursor:pointer;border:1px solid transparent;
+  background:transparent;color:var(--text2);font-family:var(--font);
+  font-size:12px;font-weight:500;transition:all 0.14s;width:100%;text-align:left;
+}
+.task-btn:hover{background:var(--bg2);color:var(--text)}
+.task-btn.active{background:var(--blue-bg);color:var(--blue2);border-color:rgba(79,142,247,0.22)}
+.task-btn .diff{
+  margin-left:auto;font-size:9px;font-weight:600;
+  padding:2px 6px;border-radius:20px;text-transform:uppercase;letter-spacing:0.05em;
+}
+.d-easy{background:var(--green-bg);color:var(--green)}
+.d-mid {background:var(--amber-bg);color:var(--amber)}
+.d-hard{background:var(--red-bg);  color:var(--red)}
 
-/* Left sidebar */
-.sidebar {
-  width: 220px;
-  flex-shrink: 0;
-  background: var(--bg1);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  padding: 20px 14px;
-  gap: 6px;
+.sidebar-bottom{margin-top:auto;border-top:1px solid var(--border);padding-top:14px}
+.status-pill{
+  display:flex;align-items:center;gap:6px;
+  padding:6px 10px;border-radius:20px;
+  font-size:11px;font-family:var(--mono);font-weight:500;margin-bottom:8px;
 }
+.pill-live {background:var(--green-bg);color:var(--green)}
+.pill-done {background:var(--bg3);color:var(--text2)}
+.pill-err  {background:var(--red-bg);color:var(--red)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.dot.pulse{animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 
-.logo-row {
-  display: flex; align-items: center; gap: 10px;
-  padding: 4px 8px 18px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 8px;
+.btn-reset{
+  width:100%;padding:8px 10px;border-radius:var(--r);
+  border:1px solid var(--border2);background:var(--bg2);color:var(--text2);
+  font-family:var(--font);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.14s;
 }
-.logo-icon {
-  width: 30px; height: 30px;
-  background: linear-gradient(135deg, #4f8ef7, #a78bfa);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.logo-icon svg { width: 14px; height: 14px; fill: white; }
-.logo-text { font-size: 13px; font-weight: 600; letter-spacing: -0.02em; }
-.logo-sub  { font-size: 10px; color: var(--text2); margin-top: 1px; }
+.btn-reset:hover{background:var(--bg3);color:var(--text)}
 
-.sidebar-label {
-  font-size: 9.5px; font-weight: 600; letter-spacing: 0.1em;
-  text-transform: uppercase; color: var(--text3);
-  padding: 4px 8px; margin-top: 6px;
-}
+/* ── MAIN ── */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column;padding:20px;gap:14px}
+.main::-webkit-scrollbar{width:5px}
+.main::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
 
-.task-btn {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 10px;
-  border-radius: var(--r);
-  cursor: pointer;
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--text2);
-  font-family: var(--font);
-  font-size: 12px;
-  font-weight: 500;
-  transition: all 0.15s;
-  width: 100%;
-  text-align: left;
-}
-.task-btn:hover { background: var(--bg2); color: var(--text); }
-.task-btn.active {
-  background: var(--blue-bg);
-  color: var(--blue2);
-  border-color: rgba(79,142,247,0.25);
-}
-.task-btn .diff {
-  margin-left: auto;
-  font-size: 9px; font-weight: 600;
-  padding: 2px 6px; border-radius: 20px;
-  text-transform: uppercase; letter-spacing: 0.05em;
-}
-.diff-easy   { background: var(--green-bg);  color: var(--green); }
-.diff-medium { background: var(--amber-bg);  color: var(--amber); }
-.diff-hard   { background: var(--red-bg);    color: var(--red);   }
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between}
+.topbar-title{font-size:16px;font-weight:600;letter-spacing:-0.02em}
+.topbar-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.chip{font-size:11px;font-family:var(--mono);font-weight:500;padding:4px 10px;border-radius:20px;border:1px solid transparent}
+.chip-green{background:var(--green-bg);color:var(--green);border-color:rgba(52,211,153,0.2)}
+.chip-red  {background:var(--red-bg);  color:var(--red);  border-color:rgba(248,113,113,0.2)}
+.chip-blue {background:var(--blue-bg); color:var(--blue2);border-color:rgba(79,142,247,0.2)}
 
-.sidebar-bottom {
-  margin-top: auto;
-  border-top: 1px solid var(--border);
-  padding-top: 14px;
+/* ── BANNERS ── */
+.banner{
+  display:none;align-items:center;gap:10px;
+  border-radius:var(--r);padding:9px 14px;
+  font-size:12px;font-family:var(--mono);
 }
-.btn-reset {
-  width: 100%; padding: 8px 10px;
-  border-radius: var(--r); border: 1px solid var(--border2);
-  background: var(--bg2); color: var(--text2);
-  font-family: var(--font); font-size: 12px; font-weight: 500;
-  cursor: pointer; transition: all 0.15s;
-}
-.btn-reset:hover { background: var(--bg3); color: var(--text); }
+.banner.show{display:flex}
+.banner-spike{background:var(--amber-bg);border:1px solid rgba(251,191,36,0.25);color:var(--amber)}
+.banner-fault{background:var(--red-bg);  border:1px solid rgba(248,113,113,0.25);color:var(--red)}
+.banner svg{width:13px;height:13px;fill:currentColor;flex-shrink:0}
 
-.status-pill {
-  display: flex; align-items: center; gap: 6px;
-  padding: 6px 10px; border-radius: 20px;
-  font-size: 11px; font-family: var(--mono); font-weight: 500;
-  margin-bottom: 8px;
+/* ── METRICS ROW ── */
+.metrics-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.metric{
+  background:var(--bg1);border:1px solid var(--border);
+  border-radius:var(--r2);padding:14px 16px;position:relative;overflow:hidden;
 }
-.status-pill.live   { background: var(--green-bg); color: var(--green); }
-.status-pill.done   { background: var(--bg3);      color: var(--text2); }
-.status-pill.error  { background: var(--red-bg);   color: var(--red);   }
-.dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-.dot.pulse { animation: pulse 1.4s ease-in-out infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.metric::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  border-radius:var(--r2) var(--r2) 0 0;
+  background:var(--ac,var(--blue));opacity:0.5;
+}
+.m-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+.m-val  {font-size:24px;font-weight:600;font-family:var(--mono);line-height:1}
+.m-sub  {font-size:10px;color:var(--text2);margin-top:5px;font-family:var(--mono)}
+.m-bar  {height:3px;border-radius:2px;background:var(--bg3);margin-top:10px;overflow:hidden}
+.m-fill {height:100%;border-radius:2px;transition:width 0.5s,background 0.3s}
 
-/* ─── MAIN ────────────────────────────────────────────────── */
-.main {
-  flex: 1; overflow-y: auto;
-  display: flex; flex-direction: column;
-  padding: 20px;
-  gap: 14px;
-}
+.cg{color:var(--green)}.ca{color:var(--amber)}.cr{color:var(--red)}.cb{color:var(--blue2)}.cp{color:var(--purple)}.ct{color:var(--text)}
 
-/* ─── TOPBAR ─────────────────────────────────────────────── */
-.topbar {
-  display: flex; align-items: center; justify-content: space-between;
-}
-.topbar-title { font-size: 16px; font-weight: 600; letter-spacing: -0.02em; }
-.topbar-sub   { font-size: 12px; color: var(--text2); margin-top: 2px; }
-.topbar-right { display: flex; align-items: center; gap: 8px; }
+/* ── CHARTS ── */
+.charts-row{display:grid;grid-template-columns:1.6fr 1fr;gap:12px}
+.card{background:var(--bg1);border:1px solid var(--border);border-radius:var(--r2);padding:16px}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-title{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.08em}
+.card-badge{font-size:10px;font-family:var(--mono);padding:2px 8px;border-radius:20px;background:var(--bg3);color:var(--text2)}
 
-.chip {
-  font-size: 11px; font-family: var(--mono); font-weight: 500;
-  padding: 4px 10px; border-radius: 20px;
-  border: 1px solid transparent;
-}
-.chip-blue   { background: var(--blue-bg);   color: var(--blue2);  border-color: rgba(79,142,247,0.2); }
-.chip-green  { background: var(--green-bg);  color: var(--green);  border-color: rgba(52,211,153,0.2); }
-.chip-amber  { background: var(--amber-bg);  color: var(--amber);  border-color: rgba(251,191,36,0.2); }
-.chip-red    { background: var(--red-bg);    color: var(--red);    border-color: rgba(248,113,113,0.2); }
+/* ── BOTTOM ── */
+.bottom-row{display:grid;grid-template-columns:1fr 1.2fr;gap:12px}
 
-/* ─── SPIKE BANNER ───────────────────────────────────────── */
-.spike-banner {
-  display: none;
-  align-items: center; gap: 10px;
-  background: var(--amber-bg);
-  border: 1px solid rgba(251,191,36,0.25);
-  border-radius: var(--r);
-  padding: 9px 14px;
-  font-size: 12px; font-family: var(--mono); color: var(--amber);
+/* ── SERVICE TABLE ── */
+.svc-table{width:100%;border-collapse:collapse}
+.svc-table th{
+  font-size:9.5px;text-transform:uppercase;letter-spacing:0.08em;
+  color:var(--text3);font-weight:600;padding:0 8px 8px;text-align:left;
 }
-.spike-banner.visible { display: flex; }
-.spike-banner svg { width: 14px; height: 14px; fill: var(--amber); flex-shrink: 0; }
+.svc-table td{padding:6px 8px;font-size:11px;font-family:var(--mono);border-top:1px solid var(--border)}
+.svc-name{color:var(--text);font-weight:500}
+.hp{display:inline-block;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
+.hp-h{background:var(--green-bg);color:var(--green)}
+.hp-d{background:var(--amber-bg);color:var(--amber)}
+.hp-c{background:var(--red-bg);  color:var(--red);animation:blink 1s ease infinite}
+.hp-o{background:var(--red-bg);  color:var(--red)}
+.tbar{width:52px;height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;display:inline-block;vertical-align:middle;margin-left:4px}
+.tfill{height:100%;border-radius:2px;transition:width 0.4s}
 
-/* ─── METRICS ROW ────────────────────────────────────────── */
-.metrics-row {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0,1fr));
-  gap: 10px;
+/* ── LOG ── */
+.log-scroll{max-height:230px;overflow-y:auto;display:flex;flex-direction:column;gap:1px}
+.log-scroll::-webkit-scrollbar{width:4px}
+.log-scroll::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+.log-row{
+  display:grid;grid-template-columns:54px 1fr auto;
+  align-items:center;gap:8px;padding:4px;border-radius:4px;transition:background 0.1s;
 }
-.metric {
-  background: var(--bg1);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  padding: 14px 16px;
-  position: relative; overflow: hidden;
-}
-.metric::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0;
-  height: 2px; border-radius: var(--r2) var(--r2) 0 0;
-  background: var(--accent-color, var(--blue));
-  opacity: 0.5;
-}
-.m-label  { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-.m-value  { font-size: 24px; font-weight: 600; font-family: var(--mono); line-height: 1; }
-.m-sub    { font-size: 10px; color: var(--text2); margin-top: 5px; font-family: var(--mono); }
-.m-bar    { height: 3px; border-radius: 2px; background: var(--bg3); margin-top: 10px; overflow: hidden; }
-.m-fill   { height: 100%; border-radius: 2px; transition: width 0.5s ease, background 0.3s ease; }
+.log-row:hover{background:var(--bg2)}
+.log-ts{font-size:10px;font-family:var(--mono);color:var(--text3)}
+.log-body{font-size:11px;font-family:var(--mono);color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.la{color:var(--blue2);font-weight:500}.ls{color:var(--purple)}.lw{color:var(--amber)}.le{color:var(--red)}
+.log-r{font-size:10px;font-family:var(--mono);font-weight:500;padding:2px 6px;border-radius:20px;white-space:nowrap}
+.lr-g{background:var(--green-bg);color:var(--green)}
+.lr-a{background:var(--amber-bg);color:var(--amber)}
+.lr-b{background:var(--red-bg);  color:var(--red)}
 
-.col-green  { color: var(--green); }
-.col-amber  { color: var(--amber); }
-.col-red    { color: var(--red); }
-.col-blue   { color: var(--blue2); }
-.col-purple { color: var(--purple); }
-.col-text   { color: var(--text); }
-
-/* ─── CHARTS ROW ─────────────────────────────────────────── */
-.charts-row {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr;
-  gap: 12px;
-}
-
-/* ─── CARDS ──────────────────────────────────────────────── */
-.card {
-  background: var(--bg1);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  padding: 16px;
-}
-.card-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 14px;
-}
-.card-title {
-  font-size: 10px; color: var(--text3);
-  font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
-}
-.card-badge {
-  font-size: 10px; font-family: var(--mono);
-  padding: 2px 8px; border-radius: 20px;
-  background: var(--bg3); color: var(--text2);
-}
-
-/* ─── BOTTOM ROW ─────────────────────────────────────────── */
-.bottom-row {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 12px;
-}
-
-/* ─── SERVICES TABLE ─────────────────────────────────────── */
-.svc-table { width: 100%; border-collapse: collapse; }
-.svc-table th {
-  font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em;
-  color: var(--text3); font-weight: 600;
-  padding: 0 8px 8px; text-align: left;
-}
-.svc-table td {
-  padding: 7px 8px;
-  font-size: 11px; font-family: var(--mono);
-  border-top: 1px solid var(--border);
-}
-.svc-name  { color: var(--text); font-weight: 500; font-size: 11px; }
-.health-pill {
-  display: inline-block;
-  padding: 2px 7px; border-radius: 20px;
-  font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
-}
-.hp-healthy  { background: var(--green-bg); color: var(--green); }
-.hp-degraded { background: var(--amber-bg); color: var(--amber); }
-.hp-critical { background: var(--red-bg);   color: var(--red);   }
-.hp-crashed  { background: var(--red-bg);   color: var(--red); animation: blink 1s ease infinite; }
-
-/* mini bar inside table */
-.tbar { width: 60px; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; display: inline-block; vertical-align: middle; }
-.tfill { height: 100%; border-radius: 2px; transition: width 0.4s; }
-
-/* ─── LOG ────────────────────────────────────────────────── */
-.log-scroll {
-  max-height: 220px; overflow-y: auto;
-  display: flex; flex-direction: column; gap: 1px;
-}
-.log-scroll::-webkit-scrollbar { width: 4px; }
-.log-scroll::-webkit-scrollbar-track { background: transparent; }
-.log-scroll::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
-
-.log-row {
-  display: grid;
-  grid-template-columns: 56px 1fr auto;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 4px;
-  border-radius: 4px;
-  transition: background 0.1s;
-}
-.log-row:hover { background: var(--bg2); }
-.log-ts     { font-size: 10px; font-family: var(--mono); color: var(--text3); }
-.log-body   { font-size: 11px; font-family: var(--mono); color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.log-body .act  { color: var(--blue2); font-weight: 500; }
-.log-body .svc  { color: var(--purple); }
-.log-body .warn { color: var(--amber); }
-.log-body .err  { color: var(--red); }
-.log-r {
-  font-size: 10px; font-family: var(--mono); font-weight: 500;
-  padding: 2px 6px; border-radius: 20px;
-  white-space: nowrap;
-}
-.log-r.good { background: var(--green-bg);  color: var(--green); }
-.log-r.mid  { background: var(--amber-bg);  color: var(--amber); }
-.log-r.bad  { background: var(--red-bg);    color: var(--red);   }
-
-/* ─── FAULT ALERT ────────────────────────────────────────── */
-.fault-alert {
-  display: none;
-  background: var(--red-bg);
-  border: 1px solid rgba(248,113,113,0.25);
-  border-radius: var(--r);
-  padding: 10px 14px;
-  font-size: 11px; font-family: var(--mono); color: var(--red);
-  line-height: 1.7;
-}
-.fault-alert.visible { display: block; }
-.fault-title { font-weight: 700; margin-bottom: 4px; font-size: 12px; }
-
-/* ─── ANIMATIONS ─────────────────────────────────────────── */
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.35} }
-@keyframes fadeIn { from{opacity:0; transform:translateY(4px)} to{opacity:1; transform:none} }
-.fade-in { animation: fadeIn 0.25s ease; }
-
-/* ─── SCROLLBAR GLOBAL ───────────────────────────────────── */
-.main::-webkit-scrollbar { width: 5px; }
-.main::-webkit-scrollbar-track { background: transparent; }
-.main::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.35}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.fi{animation:fadeIn 0.2s ease}
 </style>
 </head>
 <body>
 <div class="shell">
 
-  <!-- ═══ SIDEBAR ═══════════════════════════════════════════ -->
-  <nav class="sidebar">
-    <div class="logo-row">
-      <div class="logo-icon">
-        <svg viewBox="0 0 16 16"><path d="M2 2h5v5H2zm7 0h5v5h-5zM2 9h5v5H2zm7 0h5v5h-5z"/></svg>
+<!-- ══ SIDEBAR ══════════════════════════════════════════════ -->
+<nav class="sidebar">
+  <div class="logo-row">
+    <div class="logo-icon">
+      <svg viewBox="0 0 16 16"><path d="M2 2h5v5H2zm7 0h5v5h-5zM2 9h5v5H2zm7 0h5v5h-5z"/></svg>
+    </div>
+    <div>
+      <div class="logo-text">InfraAgent</div>
+      <div class="logo-sub">v2.0 — OpenEnv</div>
+    </div>
+  </div>
+
+  <div class="sb-label">Tasks</div>
+
+  <button class="task-btn active" id="btn-t1" onclick="setTask('task1_incident_recovery',1)">
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1L1 14h14L8 1zm0 3l4.5 9h-9L8 4z"/></svg>
+    Incident Recovery
+    <span class="diff d-easy">Easy</span>
+  </button>
+  <button class="task-btn" id="btn-t2" onclick="setTask('task2_predictive_scaling',2)">
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M1 12L5 6l3 3 3-5 4 6H1z"/></svg>
+    Predictive Scale
+    <span class="diff d-mid">Med</span>
+  </button>
+  <button class="task-btn" id="btn-t3" onclick="setTask('task3_root_cause',3)">
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" fill="none"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+    Root Cause Diag
+    <span class="diff d-hard">Hard</span>
+  </button>
+
+  <div class="sidebar-bottom">
+    <div class="status-pill pill-live" id="status-pill">
+      <span class="dot pulse" id="status-dot"></span>
+      <span id="status-text">Live</span>
+    </div>
+    <button class="btn-reset" onclick="resetSim()">↺ &nbsp;Reset Episode</button>
+  </div>
+</nav>
+
+<!-- ══ MAIN ═════════════════════════════════════════════════ -->
+<div class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="page-title">Incident Recovery</div>
+      <div class="topbar-sub" id="page-sub">Step 0 / 100 — infra-agent-env</div>
+    </div>
+    <div class="topbar-right">
+      <span class="chip chip-green" id="chip-sla">✓ SLA OK</span>
+      <span class="chip chip-blue"  id="chip-step">Step 0</span>
+    </div>
+  </div>
+
+  <!-- Spike banner -->
+  <div class="banner banner-spike" id="spike-banner">
+    <svg viewBox="0 0 16 16"><path d="M8 1L1 14h14L8 1zm0 3l4.5 9h-9L8 4z"/></svg>
+    <span id="spike-msg"></span>
+  </div>
+
+  <!-- Incident banner -->
+  <div class="banner banner-fault" id="fault-banner">
+    <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M8 5v4M8 11v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+    <span id="fault-msg"></span>
+  </div>
+
+  <!-- Metrics -->
+  <div class="metrics-row">
+    <div class="metric" style="--ac:var(--blue)">
+      <div class="m-label">Avg Latency</div>
+      <div class="m-val cg" id="m-lat">—</div>
+      <div class="m-sub">SLA: 200ms</div>
+      <div class="m-bar"><div class="m-fill" id="lat-fill" style="width:0%"></div></div>
+    </div>
+    <div class="metric" style="--ac:var(--purple)">
+      <div class="m-label">Traffic</div>
+      <div class="m-val cp" id="m-rps">—</div>
+      <div class="m-sub" id="m-trend">req/s</div>
+    </div>
+    <div class="metric" style="--ac:var(--amber)">
+      <div class="m-label">P99 Latency</div>
+      <div class="m-val ct" id="m-p99">—</div>
+      <div class="m-sub" id="m-alert">—</div>
+    </div>
+    <div class="metric" style="--ac:var(--green)">
+      <div class="m-label">Cost / Step</div>
+      <div class="m-val ct" id="m-cost">—</div>
+      <div class="m-sub" id="m-cost-sub">total: $0.00</div>
+    </div>
+    <div class="metric" style="--ac:var(--green)">
+      <div class="m-label">Avg Score</div>
+      <div class="m-val cg" id="m-score">—</div>
+      <div class="m-sub" id="m-breaches">SLA breaches: 0</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-row">
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">Latency &amp; Traffic</div>
+        <div class="card-badge">last 50 steps</div>
       </div>
-      <div>
-        <div class="logo-text">InfraAgent</div>
-        <div class="logo-sub">v2.0 — OpenEnv</div>
+      <div style="position:relative;height:128px"><canvas id="latChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">Reward per Step</div>
+        <div class="card-badge" id="avg-badge">avg: —</div>
       </div>
+      <div style="position:relative;height:128px"><canvas id="rewChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Bottom -->
+  <div class="bottom-row">
+    <!-- Services -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">Microservices</div>
+        <div class="card-badge" id="svc-badge">5 services</div>
+      </div>
+      <table class="svc-table">
+        <thead>
+          <tr>
+            <th>Service</th><th>Rep</th><th>CPU</th>
+            <th>Latency</th><th>Queue</th><th>Health</th>
+          </tr>
+        </thead>
+        <tbody id="svc-tbody">
+          <tr><td colspan="6" style="color:var(--text3);font-size:11px;padding:10px 8px">Connecting…</td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <div class="sidebar-label">Tasks</div>
-
-    <button class="task-btn active" id="btn-t1" onclick="setTask('task1_incident_recovery', 1)">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><path d="M8 1L1 14h14L8 1zm0 3l4.5 9h-9L8 4z"/></svg>
-      Incident Recovery
-      <span class="diff diff-easy">Easy</span>
-    </button>
-    <button class="task-btn" id="btn-t2" onclick="setTask('task2_predictive_scaling', 2)">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><path d="M1 12L5 6l3 3 3-5 4 6H1z"/></svg>
-      Predictive Scale
-      <span class="diff diff-medium">Med</span>
-    </button>
-    <button class="task-btn" id="btn-t3" onclick="setTask('task3_root_cause', 3)">
-      <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" style="flex-shrink:0"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" fill="none"/><path d="M8 5v3l2 2"/></svg>
-      Root Cause Diag
-      <span class="diff diff-hard">Hard</span>
-    </button>
-
-    <div class="sidebar-bottom">
-      <div class="status-pill live" id="status-pill">
-        <span class="dot pulse"></span>
-        <span id="status-text">Live</span>
+    <!-- Log -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">Agent Action Log</div>
+        <div class="card-badge" id="log-count">0 actions</div>
       </div>
-      <button class="btn-reset" onclick="resetSim()">↺ &nbsp;Reset Episode</button>
+      <div class="log-scroll" id="agent-log"></div>
     </div>
-  </nav>
+  </div>
 
-  <!-- ═══ MAIN ══════════════════════════════════════════════ -->
-  <div class="main">
-
-    <!-- Topbar -->
-    <div class="topbar">
-      <div>
-        <div class="topbar-title" id="page-title">Incident Recovery</div>
-        <div class="topbar-sub" id="page-sub">Step 0 / 100 — infra-agent-env</div>
-      </div>
-      <div class="topbar-right">
-        <span class="chip chip-blue" id="chip-sla">SLA OK</span>
-        <span class="chip chip-blue" id="chip-step">Step 0</span>
-      </div>
-    </div>
-
-    <!-- Spike banner -->
-    <div class="spike-banner" id="spike-banner">
-      <svg viewBox="0 0 16 16"><path d="M8 1L1 14h14L8 1zm0 3l4.5 9h-9L8 4z"/></svg>
-      <span id="spike-msg">Traffic spike incoming…</span>
-    </div>
-
-    <!-- Fault alert -->
-    <div class="fault-alert" id="fault-alert">
-      <div class="fault-title">⚠ FAULT DETECTED</div>
-      <span id="fault-msg">—</span>
-    </div>
-
-    <!-- Metrics -->
-    <div class="metrics-row">
-      <div class="metric" style="--accent-color: var(--blue)">
-        <div class="m-label">E2E Latency</div>
-        <div class="m-value col-green" id="m-latency">—</div>
-        <div class="m-sub">SLA: 200ms</div>
-        <div class="m-bar"><div class="m-fill" id="lat-fill" style="width:0%"></div></div>
-      </div>
-      <div class="metric" style="--accent-color: var(--purple)">
-        <div class="m-label">Traffic</div>
-        <div class="m-value col-purple" id="m-rps">—</div>
-        <div class="m-sub" id="m-trend">req/s</div>
-      </div>
-      <div class="metric" style="--accent-color: var(--amber)">
-        <div class="m-label">Error Rate</div>
-        <div class="m-value col-green" id="m-err">—</div>
-        <div class="m-sub">target &lt; 1%</div>
-        <div class="m-bar"><div class="m-fill" id="err-fill" style="width:0%"></div></div>
-      </div>
-      <div class="metric" style="--accent-color: var(--green)">
-        <div class="m-label">Cost / Step</div>
-        <div class="m-value col-text" id="m-cost">—</div>
-        <div class="m-sub" id="m-cost-sub">total: $0.00</div>
-      </div>
-      <div class="metric" style="--accent-color: var(--green)">
-        <div class="m-label">Avg Score</div>
-        <div class="m-value col-green" id="m-score">—</div>
-        <div class="m-sub" id="m-score-sub">SLA breaches: 0</div>
-      </div>
-    </div>
-
-    <!-- Charts row -->
-    <div class="charts-row">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Latency &amp; Traffic</div>
-          <div class="card-badge" id="chart-badge">last 50 steps</div>
-        </div>
-        <div style="position:relative; height: 130px;">
-          <canvas id="latChart"></canvas>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Reward per Step</div>
-          <div class="card-badge" id="avg-badge">avg: —</div>
-        </div>
-        <div style="position:relative; height: 130px;">
-          <canvas id="rewChart"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom row -->
-    <div class="bottom-row">
-      <!-- Services table -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Microservices</div>
-          <div class="card-badge" id="svc-badge">5 services</div>
-        </div>
-        <table class="svc-table">
-          <thead>
-            <tr>
-              <th>Service</th>
-              <th>Replicas</th>
-              <th>CPU</th>
-              <th>Latency</th>
-              <th>Queue</th>
-              <th>Health</th>
-            </tr>
-          </thead>
-          <tbody id="svc-tbody">
-            <tr><td colspan="6" style="color:var(--text3); font-size:11px; padding:12px 8px;">Waiting for environment…</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Log -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Agent Action Log</div>
-          <div class="card-badge" id="log-count">0 actions</div>
-        </div>
-        <div class="log-scroll" id="agent-log">
-          <div class="log-row">
-            <span class="log-ts">—</span>
-            <span class="log-body" style="color:var(--text3)">Waiting for reset…</span>
-            <span></span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /main -->
+</div><!-- /main -->
 </div><!-- /shell -->
 
 <script>
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
 // STATE
-// ═══════════════════════════════════════════════════════════
-let running       = false;
-let currentTask   = 'task1_incident_recovery';
-let stepCount     = 0;
-let maxSteps      = 100;
-let totalReward   = 0;
-let slaBreaches   = 0;
-let totalCost     = 0;
-let loopTimer     = null;
-let logCount      = 0;
+// ══════════════════════════════════════════════════════════════
+let running=false, loopTimer=null;
+let currentTask='task1_incident_recovery', maxSteps=100;
+let stepCount=0, totalReward=0, totalCost=0, slaBreaches=0, logCount=0;
 
-const TASK_META = {
-  task1_incident_recovery:  { label:'Incident Recovery',    max:100, steps_label:'100' },
-  task2_predictive_scaling: { label:'Predictive Autoscale', max:150, steps_label:'150' },
-  task3_root_cause:         { label:'Root Cause Diagnosis', max:200, steps_label:'200' },
+const TASK_META={
+  task1_incident_recovery: {label:'Incident Recovery',   max:100},
+  task2_predictive_scaling:{label:'Predictive Autoscale',max:150},
+  task3_root_cause:        {label:'Root Cause Diagnosis',max:200},
 };
 
-const HIST = 50;
-const latH = Array(HIST).fill(null);
-const rpsH = Array(HIST).fill(null);
-const rewH = Array(HIST).fill(null);
+// ═══ Correct service names used by the env ════════════════════
+// "api", "auth", "db", "cache", "queue"  (NOT api_gateway etc.)
+const SVC_MAX={api:8,auth:6,db:4,cache:6,queue:6};
+const SVC_MIN={api:1,auth:1,db:1,cache:1,queue:1};
 
-// ═══════════════════════════════════════════════════════════
+// Valid action_type values from ActionType enum:
+// scale_service | restart_service | reroute_traffic | clear_queue | adjust_cache | do_nothing
+// Valid service values: api | auth | db | cache | queue
+
+// ══════════════════════════════════════════════════════════════
 // CHARTS
-// ═══════════════════════════════════════════════════════════
-const GRID  = 'rgba(255,255,255,0.04)';
-const TICK  = { size: 9, family: "'JetBrains Mono', monospace", color: '#3d4f68' };
-const BASE_OPTIONS = {
-  responsive: true, maintainAspectRatio: false, animation: false,
-  plugins: { legend: { display: false }, tooltip: { enabled: false } },
-  elements: { point: { radius: 0 } },
-};
+// ══════════════════════════════════════════════════════════════
+const HIST=50;
+const latH=Array(HIST).fill(null), rpsH=Array(HIST).fill(null), rewH=Array(HIST).fill(null);
 
-const latCtx = document.getElementById('latChart').getContext('2d');
-const latChart = new Chart(latCtx, {
-  type: 'line',
-  data: {
-    labels: Array(HIST).fill(''),
-    datasets: [
-      {
-        label: 'Latency (ms)',
-        data: [...latH],
-        borderColor: '#4f8ef7',
-        borderWidth: 1.5,
-        tension: 0.4,
-        fill: { target: 'origin', above: 'rgba(79,142,247,0.06)' },
-        spanGaps: true,
-      },
-      {
-        label: 'RPS / 20',
-        data: [...rpsH],
-        borderColor: '#a78bfa',
-        borderWidth: 1,
-        borderDash: [4, 3],
-        tension: 0.4,
-        fill: false,
-        spanGaps: true,
-      },
-      // SLA reference line
-      {
-        label: 'SLA',
-        data: Array(HIST).fill(200),
-        borderColor: 'rgba(248,113,113,0.3)',
-        borderWidth: 1,
-        borderDash: [2, 4],
-        fill: false,
-        pointRadius: 0,
-      }
+const GRID='rgba(255,255,255,0.04)';
+const TICK={size:9,family:"'JetBrains Mono',monospace",color:'#3d4f68'};
+
+const latChart=new Chart(document.getElementById('latChart').getContext('2d'),{
+  type:'line',
+  data:{
+    labels:Array(HIST).fill(''),
+    datasets:[
+      {label:'Latency',data:[...latH],borderColor:'#4f8ef7',borderWidth:1.5,
+       tension:0.4,fill:{target:'origin',above:'rgba(79,142,247,0.06)'},spanGaps:true},
+      {label:'RPS/20', data:[...rpsH],borderColor:'#a78bfa',borderWidth:1,
+       borderDash:[4,3],tension:0.4,fill:false,spanGaps:true},
+      {label:'SLA',    data:Array(HIST).fill(200),borderColor:'rgba(248,113,113,0.28)',
+       borderWidth:1,borderDash:[2,4],fill:false,pointRadius:0},
     ]
   },
-  options: {
-    ...BASE_OPTIONS,
-    scales: {
-      x: { display: false },
-      y: {
-        min: 0,
-        suggestedMax: 400,
-        display: true,
-        ticks: { font: TICK, maxTicksLimit: 5 },
-        grid: { color: GRID },
-        border: { display: false },
-      }
+  options:{
+    responsive:true,maintainAspectRatio:false,animation:false,
+    plugins:{legend:{display:false},tooltip:{enabled:false}},
+    elements:{point:{radius:0}},
+    scales:{
+      x:{display:false},
+      y:{min:0,suggestedMax:400,display:true,
+         ticks:{font:TICK,maxTicksLimit:5},
+         grid:{color:GRID},border:{display:false}},
     }
   }
 });
 
-const rewCtx = document.getElementById('rewChart').getContext('2d');
-const rewChart = new Chart(rewCtx, {
-  type: 'bar',
-  data: {
-    labels: Array(HIST).fill(''),
-    datasets: [{
-      label: 'Reward',
-      data: [...rewH],
-      backgroundColor: rewH.map(rColor),
-      borderRadius: 2,
-      borderSkipped: false,
-    }]
+const rewChart=new Chart(document.getElementById('rewChart').getContext('2d'),{
+  type:'bar',
+  data:{
+    labels:Array(HIST).fill(''),
+    datasets:[{label:'Reward',data:[...rewH],backgroundColor:rewH.map(rc),borderRadius:2,borderSkipped:false}]
   },
-  options: {
-    ...BASE_OPTIONS,
-    scales: {
-      x: { display: false },
-      y: {
-        min: 0, max: 1,
-        display: true,
-        ticks: { font: TICK, maxTicksLimit: 4 },
-        grid: { color: GRID },
-        border: { display: false },
-      }
+  options:{
+    responsive:true,maintainAspectRatio:false,animation:false,
+    plugins:{legend:{display:false},tooltip:{enabled:false}},
+    scales:{
+      x:{display:false},
+      y:{min:0,max:1,display:true,
+         ticks:{font:TICK,maxTicksLimit:4},
+         grid:{color:GRID},border:{display:false}},
     }
   }
 });
 
-function rColor(v) {
-  if (v === null || v === undefined) return 'rgba(255,255,255,0.04)';
-  if (v >= 0.55) return '#34d399';
-  if (v >= 0.30) return '#fbbf24';
-  return '#f87171';
+function rc(v){
+  if(v==null)return'rgba(255,255,255,0.04)';
+  return v>=0.55?'#34d399':v>=0.30?'#fbbf24':'#f87171';
 }
 
-// ═══════════════════════════════════════════════════════════
-// AGENT LOGIC  (smart rule-based — mirrors inference.py)
-// ═══════════════════════════════════════════════════════════
-let lastLogs = null;
+// ══════════════════════════════════════════════════════════════
+// SMART AGENT  — uses EXACT service names + action types from env
+// ══════════════════════════════════════════════════════════════
+let lastIncidentType=null;
 
-function agentDecide(obs) {
-  // Grab per-service map — handle both list and dict forms
-  const svcs = obs.services;
-  const svcMap = {};
-  if (Array.isArray(svcs)) {
-    svcs.forEach(s => { svcMap[s.name] = s; });
-  } else if (svcs && typeof svcs === 'object') {
-    Object.assign(svcMap, svcs);
+function agentDecide(obs){
+  // Build service map from the List[ServiceMetrics] the env returns
+  const svcs={};
+  const rawSvcs=obs.services||[];
+  if(Array.isArray(rawSvcs)){
+    rawSvcs.forEach(s=>{ svcs[s.name]=s; });
+  } else {
+    Object.assign(svcs,rawSvcs);
   }
 
-  const lat      = obs.avg_latency_ms ?? obs.end_to_end_latency ?? 0;
+  const lat      = obs.avg_latency_ms ?? 0;
+  const p99      = obs.p99_latency_ms ?? lat;
   const spike    = obs.spike_warning;
-  const fault    = obs.incident_active || obs.fault_active || false;
-  const faultSvc = obs.fault_service || obs.incident_type || 'database';
-  const faultLog = obs.fault_logs || lastLogs;
+  const incident = obs.incident_active ?? false;
+  const itype    = obs.incident_type;
   const trend    = obs.traffic_trend || 'stable';
 
-  // 1. Fault → read logs → fix
-  if (fault) {
-    if (!faultLog) {
-      return { action_type: 'read_logs', service: faultSvc };
+  if(itype) lastIncidentType=itype;
+
+  // ── 1. Active incident → targeted remediation ──────────────
+  // Map incident_type → (action_type, service) matching CORRECT_REMEDIATION in incident_engine.py
+  if(incident && lastIncidentType){
+    const fixes={
+      'service_crash':      {action_type:'restart_service', service:'api'},
+      'db_overload':        {action_type:'scale_service',   service:'db',  value:2},
+      'queue_flood':        {action_type:'clear_queue',     service:'queue'},
+      'cache_invalidation': {action_type:'adjust_cache',    service:'cache',value:2},
+      'auth_degraded':      {action_type:'restart_service', service:'auth'},
+    };
+    const fix=fixes[lastIncidentType];
+    if(fix) return fix;
+  }
+
+  // ── 2. Spike warning → pre-scale API ──────────────────────
+  if(spike){
+    const apiRep=(svcs['api']?.replicas||2);
+    if(apiRep<SVC_MAX.api) return {action_type:'scale_service',service:'api',value:2};
+  }
+
+  // ── 3. SLA breach → find worst service and scale it ───────
+  if(lat>200){
+    // Find service with highest latency that still has room to scale
+    let worst=null, worstLat=0;
+    for(const [n,s] of Object.entries(svcs)){
+      const sl=s.latency_ms||0;
+      if(sl>worstLat && (s.replicas||1)<(SVC_MAX[n]||4)){
+        worstLat=sl; worst=n;
+      }
     }
-    const ll = faultLog.toLowerCase();
-    if (ll.includes('restart') || ll.includes('deadlock') || ll.includes('memory'))
-      return { action_type: 'restart_service', service: faultSvc };
-    if (ll.includes('clear') || ll.includes('queue') || ll.includes('wal') || ll.includes('disk'))
-      return { action_type: 'clear_queue', service: faultSvc };
-    return { action_type: 'restart_service', service: faultSvc };
-  }
-
-  // 2. Spike warning → pre-scale api
-  if (spike) {
-    const gw = svcMap['api_gateway'] || svcMap['api'];
-    const rep = gw ? (gw.replicas || 2) : 2;
-    if (rep < 6) return { action_type: 'scale_service', service: 'api_gateway', value: 2 };
-  }
-
-  // 3. Critical service → scale up
-  for (const [name, s] of Object.entries(svcMap)) {
-    const status = s.status || s.health || '';
-    const MAX = { api_gateway:8, auth_service:6, order_service:8, database:4, cache:3 };
-    if ((status === 'critical' || status === 'overloaded') && (s.replicas || 1) < (MAX[name] || 4)) {
-      return { action_type: 'scale_service', service: name, value: 2 };
+    if(worst){
+      const delta=lat>600?3:2;
+      return {action_type:'scale_service',service:worst,value:delta};
     }
   }
 
-  // 4. SLA breach → scale slowest service
-  if (lat > 200) {
-    const MAX2 = { api_gateway:8, auth_service:6, order_service:8, database:4, cache:3 };
-    let slowName = null, slowLat = 0;
-    for (const [name, s] of Object.entries(svcMap)) {
-      const sl = s.latency_ms || s.latency || 0;
-      if (sl > slowLat && (s.replicas || 1) < (MAX2[name] || 4)) { slowLat = sl; slowName = name; }
-    }
-    if (slowName) return { action_type: 'scale_service', service: slowName, value: lat > 600 ? 3 : 2 };
+  // ── 4. Approaching SLA → scale api ────────────────────────
+  if(lat>150){
+    const apiRep=(svcs['api']?.replicas||2);
+    if(apiRep<SVC_MAX.api) return {action_type:'scale_service',service:'api',value:1};
   }
 
-  // 5. Scale down if comfortable
-  if (lat < 120 && trend !== 'rising') {
-    const MIN = { api_gateway:1, auth_service:1, order_service:1, database:1, cache:1 };
-    for (const name of ['auth_service', 'order_service', 'api_gateway']) {
-      const s = svcMap[name];
-      if (s && (s.replicas || 1) > (MIN[name] || 1) + 1) {
-        return { action_type: 'scale_service', service: name, value: -1 };
+  // ── 5. Heavy queue → clear it ─────────────────────────────
+  const queueSize=obs.queue_size||0;
+  if(queueSize>2000) return {action_type:'clear_queue',service:'queue'};
+
+  // ── 6. Rising traffic → pre-scale ─────────────────────────
+  if(trend==='rising'){
+    const apiRep=(svcs['api']?.replicas||2);
+    if(apiRep<SVC_MAX.api-1) return {action_type:'scale_service',service:'api',value:1};
+  }
+
+  // ── 7. Comfortable → trim cost ────────────────────────────
+  if(lat<120 && trend!=='rising'){
+    for(const n of ['auth','api','queue']){
+      const s=svcs[n];
+      if(s && (s.replicas||1)>(SVC_MIN[n]||1)+1){
+        return {action_type:'scale_service',service:n,value:-1};
       }
     }
   }
 
-  return { action_type: 'do_nothing' };
+  return {action_type:'do_nothing'};
 }
 
-// ═══════════════════════════════════════════════════════════
-// API
-// ═══════════════════════════════════════════════════════════
-async function apiGet(path) {
-  const r = await fetch(path);
-  if (!r.ok) throw new Error(`GET ${path} → ${r.status}`);
+// ══════════════════════════════════════════════════════════════
+// API HELPERS
+// ══════════════════════════════════════════════════════════════
+async function apiGet(path){
+  const r=await fetch(path);
+  if(!r.ok) throw new Error(`GET ${path} → ${r.status}`);
   return r.json();
 }
-async function apiPost(path, body) {
-  const r = await fetch(path, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+async function apiPost(path,body){
+  const r=await fetch(path,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(body),
   });
-  if (!r.ok) throw new Error(`POST ${path} → ${r.status}`);
+  if(!r.ok){
+    const txt=await r.text();
+    throw new Error(`POST ${path} → ${r.status}: ${txt.slice(0,120)}`);
+  }
   return r.json();
 }
 
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
 // MAIN LOOP
-// ═══════════════════════════════════════════════════════════
-async function loop() {
-  if (!running) return;
-  try {
-    const state = await apiGet('/state');
-    if (state.done) { finish(); return; }
+// ══════════════════════════════════════════════════════════════
+async function loop(){
+  if(!running) return;
+  try{
+    const state=await apiGet('/state');
+    if(state.done){finish();return;}
 
-    const action = agentDecide(state);
-    const res    = await apiPost('/step', action);
-    const obs    = res.observation;
-    const reward = res.reward ?? 0;
-
-    // Cache fault logs
-    if (obs.fault_logs) lastLogs = obs.fault_logs;
+    const action=agentDecide(state);
+    const res=await apiPost('/step',action);
+    const obs=res.observation;
+    const reward=res.reward??0;
 
     stepCount++;
-    totalReward += reward;
-    totalCost   += (obs.cost_per_step ?? obs.total_cost ?? 0);
-    if (obs.sla_breach || obs.sla_breached) slaBreaches++;
+    totalReward+=reward;
+    totalCost+=(obs.cost_per_step??0);
+    if(obs.sla_breach) slaBreaches++;
 
-    updateMetrics(obs, reward);
+    updateMetrics(obs,reward);
     updateServices(obs);
-    updateCharts(obs, reward);
-    appendLog(obs, action, reward);
-    updateSidebar();
-    updateAlerts(obs);
+    updateCharts(obs,reward);
+    appendLog(obs,action,reward);
+    updateBanners(obs);
 
-    if (res.done || obs.time_step >= maxSteps) { finish(); return; }
-
-    loopTimer = setTimeout(loop, 750);
-  } catch (e) {
+    if(res.done||obs.time_step>=maxSteps){finish();return;}
+    loopTimer=setTimeout(loop,750);
+  }catch(e){
     console.error(e);
-    appendErrLog('API error: ' + e.message);
-    loopTimer = setTimeout(loop, 2500);
+    appendErrLog(e.message);
+    loopTimer=setTimeout(loop,2500);
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-// UI UPDATE FUNCTIONS
-// ═══════════════════════════════════════════════════════════
-function updateMetrics(obs, reward) {
-  const lat  = obs.avg_latency_ms ?? obs.end_to_end_latency ?? 0;
-  const rps  = obs.total_rps ?? obs.requests_per_second ?? 0;
-  const err  = obs.overall_error_rate ?? obs.error_rate ?? 0;
-  const cost = obs.cost_per_step ?? 0;
-  const step = obs.time_step ?? stepCount;
-  const trend= obs.traffic_trend || 'stable';
+// ══════════════════════════════════════════════════════════════
+// UI UPDATERS
+// ══════════════════════════════════════════════════════════════
+function updateMetrics(obs,reward){
+  const lat  = obs.avg_latency_ms??0;
+  const p99  = obs.p99_latency_ms??lat;
+  const rps  = obs.total_rps??0;
+  const cost = obs.cost_per_step??0;
+  const step = obs.time_step??stepCount;
+  const trend= obs.traffic_trend||'stable';
+  const alert= obs.alert_level||'none';
+  const avgR = stepCount>0?totalReward/stepCount:0;
 
   // Latency
-  const latEl = document.getElementById('m-latency');
-  latEl.textContent = Math.round(lat) + 'ms';
-  latEl.className   = 'm-value ' + (lat > 200 ? 'col-red' : lat > 160 ? 'col-amber' : 'col-green');
-  const latPct = Math.min((lat / 200) * 100, 100);
-  const latFill = document.getElementById('lat-fill');
-  latFill.style.width      = latPct + '%';
-  latFill.style.background = lat > 200 ? 'var(--red)' : lat > 160 ? 'var(--amber)' : 'var(--green)';
+  const le=document.getElementById('m-lat');
+  le.textContent=Math.round(lat)+'ms';
+  le.className='m-val '+(lat>200?'cr':lat>160?'ca':'cg');
+  const lf=document.getElementById('lat-fill');
+  const lp=Math.min((lat/200)*100,100);
+  lf.style.width=lp+'%';
+  lf.style.background=lat>200?'var(--red)':lat>160?'var(--amber)':'var(--green)';
 
   // SLA chip
-  const slaChip = document.getElementById('chip-sla');
-  if (lat > 200) {
-    slaChip.textContent  = '⚠ SLA BREACH';
-    slaChip.className    = 'chip chip-red';
-  } else {
-    slaChip.textContent  = '✓ SLA OK';
-    slaChip.className    = 'chip chip-green';
-  }
+  const sc=document.getElementById('chip-sla');
+  if(lat>200){sc.textContent='⚠ SLA BREACH';sc.className='chip chip-red';}
+  else        {sc.textContent='✓ SLA OK';    sc.className='chip chip-green';}
 
   // Traffic
-  document.getElementById('m-rps').textContent  = Math.round(rps);
-  document.getElementById('m-trend').textContent = `req/s · ${trend}`;
+  document.getElementById('m-rps').textContent=Math.round(rps);
+  document.getElementById('m-trend').textContent=`req/s · ${trend}`;
 
-  // Error rate
-  const errEl = document.getElementById('m-err');
-  errEl.textContent = err.toFixed(2) + '%';
-  errEl.className   = 'm-value ' + (err > 5 ? 'col-red' : err > 1 ? 'col-amber' : 'col-green');
-  const errFill = document.getElementById('err-fill');
-  errFill.style.width      = Math.min(err * 10, 100) + '%';
-  errFill.style.background = err > 5 ? 'var(--red)' : err > 1 ? 'var(--amber)' : 'var(--green)';
+  // P99
+  const pe=document.getElementById('m-p99');
+  pe.textContent=Math.round(p99)+'ms';
+  pe.className='m-val '+(p99>300?'cr':p99>200?'ca':'ct');
+  document.getElementById('m-alert').textContent=
+    alert==='critical'?'⚠ CRITICAL':alert==='warning'?'⚡ WARNING':'nominal';
 
   // Cost
-  document.getElementById('m-cost').textContent     = '$' + cost.toFixed(3);
-  document.getElementById('m-cost-sub').textContent  = `total: $${totalCost.toFixed(2)}`;
+  document.getElementById('m-cost').textContent='$'+cost.toFixed(3);
+  document.getElementById('m-cost-sub').textContent=`total: $${totalCost.toFixed(2)}`;
 
   // Score
-  const avg = stepCount > 0 ? totalReward / stepCount : 0;
-  const scoreEl = document.getElementById('m-score');
-  scoreEl.textContent = avg.toFixed(3);
-  scoreEl.className   = 'm-value ' + (avg >= 0.5 ? 'col-green' : avg >= 0.3 ? 'col-amber' : 'col-red');
-  document.getElementById('m-score-sub').textContent = `SLA breaches: ${slaBreaches}`;
+  const sre=document.getElementById('m-score');
+  sre.textContent=avgR.toFixed(3);
+  sre.className='m-val '+(avgR>=0.5?'cg':avgR>=0.3?'ca':'cr');
+  document.getElementById('m-breaches').textContent=`SLA breaches: ${slaBreaches}`;
 
-  // Step chip + page sub
-  const meta = TASK_META[currentTask] || TASK_META.task1_incident_recovery;
-  document.getElementById('chip-step').textContent  = `Step ${step}`;
-  document.getElementById('page-sub').textContent   = `Step ${step} / ${meta.max} — infra-agent-env`;
-  document.getElementById('avg-badge').textContent  = `avg: ${avg.toFixed(3)}`;
+  // Step + sub
+  const meta=TASK_META[currentTask]||TASK_META.task1_incident_recovery;
+  document.getElementById('chip-step').textContent=`Step ${step}`;
+  document.getElementById('page-sub').textContent=`Step ${step} / ${meta.max} — infra-agent-env`;
+  document.getElementById('avg-badge').textContent=`avg: ${avgR.toFixed(3)}`;
 }
 
-function updateServices(obs) {
-  const tbody = document.getElementById('svc-tbody');
-  const svcs  = obs.services;
-  if (!svcs) return;
+function updateServices(obs){
+  const tbody=document.getElementById('svc-tbody');
+  const raw=obs.services||[];
+  const list=Array.isArray(raw)?raw:Object.values(raw);
+  if(!list.length) return;
 
-  const list = Array.isArray(svcs) ? svcs : Object.values(svcs);
-  if (!list.length) return;
+  tbody.innerHTML=list.map(s=>{
+    const name   = s.name||'?';
+    const rep    = s.replicas??'?';
+    const cpu    = s.cpu_percent??0;
+    const lat    = s.latency_ms??0;
+    const queue  = s.queue_size??0;
+    const status = (s.status||'healthy').toLowerCase();
 
-  tbody.innerHTML = list.map(s => {
-    const name   = s.name || '—';
-    const rep    = s.replicas ?? '?';
-    const cpu    = s.cpu_percent ?? 0;
-    const lat    = s.latency_ms ?? s.latency ?? 0;
-    const queue  = s.queue_size ?? s.queue_depth ?? 0;
-    const health = (s.health ?? s.status ?? 'healthy').toLowerCase();
+    const hClass = status==='healthy'  ?'hp-h'
+                 : status==='degraded' ?'hp-d'
+                 : status==='overloaded'||status==='critical'?'hp-o'
+                 : 'hp-c';
+    const hLabel = status;
 
-    const hClass = health === 'healthy' ? 'hp-healthy'
-                 : health === 'degraded' ? 'hp-degraded'
-                 : health === 'critical' || health === 'overloaded' ? 'hp-critical'
-                 : 'hp-crashed';
-    const hLabel = health;
-
-    const cpuColor = cpu > 80 ? 'var(--red)' : cpu > 60 ? 'var(--amber)' : 'var(--green)';
+    const cpuC=cpu>80?'var(--red)':cpu>60?'var(--amber)':'var(--green)';
+    const latC=lat>200?'var(--red)':lat>150?'var(--amber)':'var(--text2)';
 
     return `<tr>
       <td><span class="svc-name">${name}</span></td>
       <td style="color:var(--blue2)">${rep}</td>
       <td>
-        <span style="color:${cpuColor}">${Math.round(cpu)}%</span>
-        <span class="tbar" style="margin-left:4px"><span class="tfill" style="width:${cpu}%;background:${cpuColor}"></span></span>
+        <span style="color:${cpuC}">${Math.round(cpu)}%</span>
+        <span class="tbar"><span class="tfill" style="width:${Math.min(cpu,100)}%;background:${cpuC}"></span></span>
       </td>
-      <td style="color:${lat > 200 ? 'var(--red)' : lat > 150 ? 'var(--amber)' : 'var(--text2)'}">${Math.round(lat)}ms</td>
-      <td style="color:${queue > 500 ? 'var(--red)' : queue > 300 ? 'var(--amber)' : 'var(--text3)'}">${queue}</td>
-      <td><span class="health-pill ${hClass}">${hLabel}</span></td>
+      <td style="color:${latC}">${Math.round(lat)}ms</td>
+      <td style="color:${queue>1000?'var(--red)':queue>500?'var(--amber)':'var(--text3)'}">${queue}</td>
+      <td><span class="hp ${hClass}">${hLabel}</span></td>
     </tr>`;
   }).join('');
 }
 
-function updateCharts(obs, reward) {
-  const lat = obs.avg_latency_ms ?? obs.end_to_end_latency ?? 0;
-  const rps = (obs.total_rps ?? obs.requests_per_second ?? 0) / 20;
+function updateCharts(obs,reward){
+  const lat=obs.avg_latency_ms??0;
+  const rps=(obs.total_rps??0)/20;
+  latH.push(Math.round(lat)); latH.shift();
+  rpsH.push(Math.round(rps)); rpsH.shift();
+  rewH.push(parseFloat((reward??0).toFixed(3))); rewH.shift();
 
-  latH.push(Math.round(lat));   latH.shift();
-  rpsH.push(Math.round(rps));   rpsH.shift();
-  rewH.push(parseFloat((reward ?? 0).toFixed(3))); rewH.shift();
-
-  latChart.data.datasets[0].data = [...latH];
-  latChart.data.datasets[1].data = [...rpsH];
+  latChart.data.datasets[0].data=[...latH];
+  latChart.data.datasets[1].data=[...rpsH];
   latChart.update('none');
-
-  rewChart.data.datasets[0].data            = [...rewH];
-  rewChart.data.datasets[0].backgroundColor = rewH.map(rColor);
+  rewChart.data.datasets[0].data=[...rewH];
+  rewChart.data.datasets[0].backgroundColor=rewH.map(rc);
   rewChart.update('none');
 }
 
-function appendLog(obs, action, reward) {
-  const log  = document.getElementById('agent-log');
+function appendLog(obs,action,reward){
+  const log=document.getElementById('agent-log');
   logCount++;
-  document.getElementById('log-count').textContent = logCount + ' actions';
+  document.getElementById('log-count').textContent=logCount+' actions';
 
-  const now = new Date();
-  const ts  = now.toTimeString().slice(0, 8);
+  const ts=new Date().toTimeString().slice(0,8);
+  const atype=action.action_type||'do_nothing';
+  const svc  =action.service ? ` → <span class="ls">${action.service}</span>` : '';
+  const val  =action.value   ? ` <span style="color:var(--text2)">(${action.value>0?'+':''}${action.value})</span>` : '';
+  const rClass=reward>=0.55?'lr-g':reward>=0.30?'lr-a':'lr-b';
 
-  const atype = action.action_type || 'do_nothing';
-  const svc   = action.service ? ` → <span class="svc">${action.service}</span>` : '';
-  const val   = action.value   ? ` <span style="color:var(--text2)">(${action.value > 0 ? '+' : ''}${action.value})</span>` : '';
-
-  const rClass = reward >= 0.55 ? 'good' : reward >= 0.30 ? 'mid' : 'bad';
-
-  const row = document.createElement('div');
-  row.className = 'log-row fade-in';
-  row.innerHTML = `
+  const row=document.createElement('div');
+  row.className='log-row fi';
+  row.innerHTML=`
     <span class="log-ts">${ts}</span>
-    <span class="log-body"><span class="act">${atype}</span>${svc}${val}</span>
-    <span class="log-r ${rClass}">${(reward ?? 0).toFixed(3)}</span>
-  `;
+    <span class="log-body"><span class="la">${atype}</span>${svc}${val}</span>
+    <span class="log-r ${rClass}">${(reward??0).toFixed(3)}</span>`;
   log.appendChild(row);
-  log.scrollTop = log.scrollHeight;
-
-  // Keep log bounded
-  while (log.children.length > 120) log.removeChild(log.firstChild);
+  log.scrollTop=log.scrollHeight;
+  while(log.children.length>100) log.removeChild(log.firstChild);
 }
 
-function appendErrLog(msg) {
-  const log = document.getElementById('agent-log');
-  const row = document.createElement('div');
-  row.className = 'log-row fade-in';
-  row.innerHTML = `<span class="log-ts">err</span><span class="log-body err">${msg}</span><span></span>`;
+function appendErrLog(msg){
+  const log=document.getElementById('agent-log');
+  const row=document.createElement('div');
+  row.className='log-row fi';
+  row.innerHTML=`<span class="log-ts">err</span><span class="log-body le">${msg}</span><span></span>`;
   log.appendChild(row);
-  log.scrollTop = log.scrollHeight;
+  log.scrollTop=log.scrollHeight;
 }
 
-function updateAlerts(obs) {
-  // Spike banner
-  const banner = document.getElementById('spike-banner');
-  const spike  = obs.spike_warning;
-  if (spike) {
-    document.getElementById('spike-msg').textContent = spike;
-    banner.classList.add('visible');
-  } else {
-    banner.classList.remove('visible');
-  }
+function updateBanners(obs){
+  const sb=document.getElementById('spike-banner');
+  const sp=obs.spike_warning;
+  if(sp){document.getElementById('spike-msg').textContent=sp;sb.classList.add('show');}
+  else sb.classList.remove('show');
 
-  // Fault alert
-  const faultEl = document.getElementById('fault-alert');
-  const fault   = obs.incident_active || obs.fault_active || false;
-  if (fault) {
-    const ft = obs.fault_type || obs.incident_type || 'Unknown fault';
-    const fs = obs.fault_service || '?';
-    document.getElementById('fault-msg').textContent =
-      `Service: ${fs} | Type: ${ft} | ${obs.fault_logs ? 'Logs read — applying fix…' : 'Awaiting log read…'}`;
-    faultEl.classList.add('visible');
-  } else {
-    faultEl.classList.remove('visible');
-  }
+  const fb=document.getElementById('fault-banner');
+  const incident=obs.incident_active??false;
+  const itype=obs.incident_type;
+  if(incident&&itype){
+    document.getElementById('fault-msg').textContent=
+      `INCIDENT: ${itype.replace(/_/g,' ')} — applying fix…`;
+    fb.classList.add('show');
+  } else fb.classList.remove('show');
 }
 
-function updateSidebar() {
-  // Keep status pill live
-}
-
-// ═══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
 // TASK / RESET
-// ═══════════════════════════════════════════════════════════
-async function setTask(taskId, num) {
-  currentTask = taskId;
-  maxSteps    = (TASK_META[taskId] || {}).max || 100;
-
-  ['btn-t1','btn-t2','btn-t3'].forEach((id, i) => {
-    document.getElementById(id).classList.toggle('active', i + 1 === num);
+// ══════════════════════════════════════════════════════════════
+async function setTask(taskId,num){
+  currentTask=taskId;
+  maxSteps=(TASK_META[taskId]||{}).max||100;
+  ['btn-t1','btn-t2','btn-t3'].forEach((id,i)=>{
+    document.getElementById(id).classList.toggle('active',i+1===num);
   });
-  document.getElementById('page-title').textContent =
-    (TASK_META[taskId] || {}).label || taskId;
-
+  document.getElementById('page-title').textContent=(TASK_META[taskId]||{}).label||taskId;
   await resetSim(taskId);
 }
 
-async function resetSim(taskId) {
-  running = false;
+async function resetSim(taskId){
+  running=false;
   clearTimeout(loopTimer);
+  const tid=taskId||currentTask;
 
-  const tid = taskId || currentTask;
-  stepCount   = 0;
-  totalReward = 0;
-  totalCost   = 0;
-  slaBreaches = 0;
-  logCount    = 0;
-  lastLogs    = null;
-
-  latH.fill(null);
-  rpsH.fill(null);
-  rewH.fill(null);
+  stepCount=0;totalReward=0;totalCost=0;slaBreaches=0;logCount=0;
+  lastIncidentType=null;
+  latH.fill(null);rpsH.fill(null);rewH.fill(null);
+  latChart.data.datasets[0].data=[...latH];
+  latChart.data.datasets[1].data=[...rpsH];
   latChart.update('none');
+  rewChart.data.datasets[0].data=[...rewH];
   rewChart.update('none');
 
-  document.getElementById('agent-log').innerHTML = '';
-  document.getElementById('svc-tbody').innerHTML =
-    '<tr><td colspan="6" style="color:var(--text3);font-size:11px;padding:12px 8px;">Resetting…</td></tr>';
-  document.getElementById('m-latency').textContent = '—';
-  document.getElementById('m-rps').textContent     = '—';
-  document.getElementById('m-err').textContent     = '—';
-  document.getElementById('m-cost').textContent    = '—';
-  document.getElementById('m-score').textContent   = '—';
+  document.getElementById('agent-log').innerHTML='';
+  document.getElementById('svc-tbody').innerHTML=
+    '<tr><td colspan="6" style="color:var(--text3);font-size:11px;padding:10px 8px">Resetting…</td></tr>';
+  ['m-lat','m-rps','m-p99','m-cost','m-score'].forEach(id=>{
+    document.getElementById(id).textContent='—';
+  });
+  document.getElementById('spike-banner').classList.remove('show');
+  document.getElementById('fault-banner').classList.remove('show');
+  document.getElementById('chip-sla').textContent='✓ SLA OK';
+  document.getElementById('chip-sla').className='chip chip-green';
 
-  const pill = document.getElementById('status-pill');
-  pill.className = 'status-pill live';
-  document.getElementById('status-text').textContent = 'Live';
+  const pill=document.getElementById('status-pill');
+  pill.className='status-pill pill-live';
+  document.getElementById('status-dot').classList.add('pulse');
+  document.getElementById('status-text').textContent='Live';
 
-  document.getElementById('spike-banner').classList.remove('visible');
-  document.getElementById('fault-alert').classList.remove('visible');
-
-  try {
-    await fetch(`/reset?task_id=${tid}&seed=42`, { method: 'POST' });
-    running = true;
-    appendErrLog(`Episode started: ${tid}`);
-    loopTimer = setTimeout(loop, 300);
-  } catch(e) {
-    appendErrLog('Cannot connect to env server: ' + e.message);
+  try{
+    await fetch(`/reset?task_id=${tid}&seed=42`,{method:'POST'});
+    running=true;
+    appendErrLog(`Started: ${tid}`);
+    loopTimer=setTimeout(loop,400);
+  }catch(e){
+    pill.className='status-pill pill-err';
+    document.getElementById('status-text').textContent='Error';
+    appendErrLog('Cannot connect: '+e.message);
   }
 }
 
-function finish() {
-  running = false;
-  const avg  = stepCount > 0 ? (totalReward / stepCount).toFixed(3) : '0.000';
-  const pill = document.getElementById('status-pill');
-  pill.className = 'status-pill done';
-  pill.querySelector('.dot').classList.remove('pulse');
-  document.getElementById('status-text').textContent = 'Done';
-  appendErrLog(`Episode complete — avg score: ${avg}  SLA breaches: ${slaBreaches}`);
+function finish(){
+  running=false;
+  const avg=stepCount>0?(totalReward/stepCount).toFixed(3):'0.000';
+  const pill=document.getElementById('status-pill');
+  pill.className='status-pill pill-done';
+  document.getElementById('status-dot').classList.remove('pulse');
+  document.getElementById('status-text').textContent='Done';
+  appendErrLog(`Episode complete — score: ${avg}  breaches: ${slaBreaches}`);
 }
 
-// ═══════════════════════════════════════════════════════════
-// BOOT
-// ═══════════════════════════════════════════════════════════
+// ══ BOOT ══
 resetSim('task1_incident_recovery');
 </script>
 </body>
