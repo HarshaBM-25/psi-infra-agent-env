@@ -1,5 +1,5 @@
 """
-inference.py — InfraAgent-Env v2 inference script
+inference.py — InfraAgent-Env v2 inference script.
 Hackathon compliant: [START] [STEP] [END] format.
 Uses OpenAI client. Falls back to heuristic if LLM quota exhausted.
 """
