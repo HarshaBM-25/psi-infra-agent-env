@@ -1,0 +1,36 @@
+environment:
+  name: infra-agent-env-v2
+  version: 2.0.0
+
+sla:
+  latency_ms: 200
+  p99_multiplier: 1.5
+
+cost:
+  cost_per_replica_per_step: 0.05
+
+services:
+  names: [api, auth, db, cache, queue]
+  initial_replicas:
+    api: 3
+    auth: 2
+    db: 2
+    cache: 2
+    queue: 2
+  max_replicas: 10
+  min_replicas: 1
+
+tasks:
+  task1_incident_recovery:
+    max_steps: 100
+    difficulty: easy
+    incident_step: 1
+  task2_predictive_scaling:
+    max_steps: 150
+    difficulty: medium
+    incident_step: 50
+  task3_root_cause:
+    max_steps: 200
+    difficulty: hard
+    incident_step: 35
+    cascade_step: 60

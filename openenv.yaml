@@ -1,0 +1,73 @@
+name: infra-agent-env-v2
+version: 2.0.0
+description: >
+  Microservice-aware OpenEnv RL environment. An AI agent acts as an autonomous SRE
+  managing a cluster of interdependent services (API, Auth, DB, Cache, Queue).
+  Simulates cascading failures, queue buildup, DB overload, and traffic surges.
+  Three tasks of increasing difficulty: incident recovery, predictive scaling, root cause diagnosis.
+
+author: Harsha
+license: MIT
+entry_point: main:app
+
+tasks:
+  - id: task1_incident_recovery
+    difficulty: easy
+    max_steps: 100
+    description: System already degraded. Recover from active incident within episode.
+
+  - id: task2_predictive_scaling
+    difficulty: medium
+    max_steps: 150
+    description: Traffic ramping with two surge events. Pre-scale before spikes hit.
+
+  - id: task3_root_cause
+    difficulty: hard
+    max_steps: 200
+    description: Cascading failures across services. Diagnose root cause and remediate.
+
+observation_space:
+  type: object
+  model: InfraObservation
+  key_fields:
+    - time_step
+    - total_rps
+    - avg_latency_ms
+    - p99_latency_ms
+    - sla_breach
+    - services
+    - queue_size
+    - db_connections
+    - cache_hit_rate
+    - latency_history
+    - alert_level
+    - alert_message
+    - spike_warning
+    - summary
+
+action_space:
+  type: object
+  model: InfraAction
+  actions:
+    - scale_service
+    - restart_service
+    - reroute_traffic
+    - clear_queue
+    - adjust_cache
+    - do_nothing
+
+reward_range: [0.0, 1.0]
+reward_description: >
+  Continuous per-step reward combining latency score (40%), SLA P99 (10%),
+  cost efficiency (20%), stability (10%), and incident recovery (20%).
+  Never binary — always provides partial progress signal.
+
+endpoints:
+  reset: POST /reset
+  step:  POST /step
+  state: GET  /state
+  health: GET /health
+
+docker:
+  port: 7860
+  base_image: python:3.11-slim

@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "infra-agent-env"
+version = "2.0.0"
+description = "Microservice-aware OpenEnv RL environment for autonomous SRE agents"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = [
+    "fastapi==0.115.0",
+    "uvicorn==0.30.6",
+    "pydantic==2.7.4",
+    "pyyaml==6.0.2",
+    "numpy==1.26.4",
+    "openai==1.40.0",
+    "httpx==0.27.0",
+    "python-dotenv==1.0.1",
+    "openenv-core",
+    "requests",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.2.2"]
+
+[project.scripts]
+server = "server.app:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["env*", "tasks*", "graders*", "agents*", "utils*", "server*"]
