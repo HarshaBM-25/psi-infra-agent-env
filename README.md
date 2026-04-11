@@ -1,5 +1,15 @@
 # InfraAgent-Env v2.0
 
+---
+title: Infra Agent Environment
+emoji: ⚙️
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 **An autonomous Site Reliability Engineering (SRE) training environment powered by RL and LLMs.**
 
 ![Build](https://img.shields.io/badge/build-passing-brightgreen) ![Python](https://img.shields.io/badge/python-3.10+-blue) ![License](https://img.shields.io/badge/license-MIT-green)
