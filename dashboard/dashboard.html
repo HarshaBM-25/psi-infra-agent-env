@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>InfraAgent Dashboard</title>
+
+<link rel="stylesheet" href="/dashboard/dashboard.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+<h1>InfraAgent Dashboard</h1>
+<div class="badges">
+<span id="env-status" class="badge live">LIVE</span>
+<span id="task-label" class="badge task">Task</span>
+</div>
+</header>
+
+<section class="metrics">
+
+<div class="metric">
+<span>Latency</span>
+<h2 id="latency">—</h2>
+</div>
+
+<div class="metric">
+<span>Traffic</span>
+<h2 id="rps">—</h2>
+</div>
+
+<div class="metric">
+<span>CPU</span>
+<h2 id="cpu">—</h2>
+</div>
+
+<div class="metric">
+<span>Pods</span>
+<h2 id="pods">—</h2>
+</div>
+
+<div class="metric">
+<span>Score</span>
+<h2 id="score">—</h2>
+</div>
+
+</section>
+
+<section class="charts">
+
+<div class="chart">
+<h3>Latency</h3>
+<canvas id="latChart"></canvas>
+</div>
+
+<div class="chart">
+<h3>Reward</h3>
+<canvas id="rewChart"></canvas>
+</div>
+
+</section>
+
+<section class="pods">
+
+<h3>Pods</h3>
+<div id="pod-grid"></div>
+
+</section>
+
+<section class="log">
+
+<h3>Agent Actions</h3>
+<div id="agent-log"></div>
+
+</section>
+
+<section class="controls">
+
+<button onclick="setTask('task1_incident_recovery')">Task 1</button>
+<button onclick="setTask('task2_predictive_scaling')">Task 2</button>
+<button onclick="setTask('task3_root_cause')">Task 3</button>
+
+<button onclick="resetSim()">Reset</button>
+
+</section>
+
+</div>
+
+<script src="/dashboard/dashboard.js"></script>
+
+</body>
+</html>

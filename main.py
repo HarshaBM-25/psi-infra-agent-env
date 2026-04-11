@@ -13,6 +13,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from env.infra_env import InfraEnv
 from env.schemas import InfraAction, StepResult, ResetResult, InfraState
 
+from server.dashboard_router import router as dashboard_router
+
+app.include_router(dashboard_router)
+
 _env: Optional[InfraEnv] = None
 DEFAULT_TASK = os.getenv("TASK_ID", "task1_incident_recovery")
 
