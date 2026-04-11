@@ -154,11 +154,7 @@ class InfraEnv:
         self._episode_rewards.append(reward_detail.total)
 
         # Done?
-        self._done = (
-            self._time_step >= self.max_steps
-            or latency >= 9000.0
-        )
-
+        self._done = self._time_step >= self.max_steps
         obs = self._build_observation(sim_result=sim_result, rps=rps)
 
         info = {
