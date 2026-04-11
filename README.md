@@ -1,4 +1,3 @@
-# InfraAgent-Env v2.0
 
 ---
 title: Infra Agent Environment
@@ -9,6 +8,9 @@ sdk: docker
 app_port: 7860
 pinned: false
 ---
+
+# InfraAgent-Env v2.0
+
 
 **An autonomous Site Reliability Engineering (SRE) training environment powered by RL and LLMs.**
 
